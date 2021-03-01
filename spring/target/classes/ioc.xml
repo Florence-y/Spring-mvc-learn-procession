@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+<!--    简单测试容器赋值-->
+<!--    属性辅助-->
+    <bean id="person1" class="pojo.Person">
+        <property name="age" value="18"></property>
+        <property name="lastName" value="Florence"></property>
+        <property name="email" value="2213576511@qq.com"></property>
+        <property name="markNumber" value="13288522374"></property>
+    </bean>
+<!--    构造器赋值  name 属性名 value 值-->
+    <bean id="person2" class="pojo.Person">
+        <constructor-arg name="age" value=""></constructor-arg>
+    </bean>
+<!--    use p tag setAttribute-->
+    <bean id="person3" class="pojo.Person" p:age="18"></bean>
+
+
+<!--setAttribute for mixClassType ****************************************************-->
+    <bean id="person4" class="pojo.Person">
+<!--        set Attribute :null-->
+        <property name="markNumber" >
+            <null></null>
+        </property>
+<!--        set Attribute class : first version , this instances is same to new but not ref -->
+        <property name="cat" >
+            <bean class="pojo.Cat">
+                <property name="name" value="小吴"></property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="person5" class="pojo.Person">
+        <property name="lastName" value="Florence"></property>
+        <property name="cat" ref="cat1"></property>
+    </bean>
+    <bean id="cat1" class="pojo.Cat">
+        <property name="name" value="littleBlack"></property>
+        <property name="habit" value="stone"></property>
+        <property name="master" value="Florence"></property>
+        <property name="target" value="mouse"></property>
+    </bean>
+<!--    set value for list :example-->
+    <bean id="person6" class="pojo.Person">
+        <property name="cats" >
+<!--  if you haven't any value in list tag ,this is same to you declare List cats = new ArrayList<>()          -->
+            <list>
+<!--                new  attention:the id is the inner beanTag is useless ,you can't through getBean to get this bean -->
+                <bean id="ssss" class="pojo.Cat"></bean>
+<!--                ref -->
+                <ref bean="cat1"></ref>
+            </list>
+        </property>
+    </bean>
+    <bean id="person7" class="pojo.Person">
+        <property name="map" ref="map">
+        </property>
+        <property name="properties" >
+<!--            new Properies-->
+            <props>
+                <prop key="username">root</prop>
+                <prop key="password">qq123456</prop>
+            </props>
+        </property>
+    </bean>
+<!--    the use of util nameSpace
+        the declaration is same to new LinkedHashMap
+         declare the global map ,you can ref it in any beans in beans tag
+         -->
+    <util:map id="map">
+        <entry key="sss" value-ref="cat1"></entry>
+    </util:map>
+    <util:list id="list">
+        <value></value>
+
+    </util:list>
+<!--   cascade set Value -->
+    <bean id="person8" class="pojo.Person">
+        <property name="cat" ref="cat1"></property>
+        <property name="cat.master" value="Flore"></property>
+    </bean>
+<!--    by means of the extend to get the existed information-->
+    <bean id="person9" parent="person1"></bean>
+</beans>
